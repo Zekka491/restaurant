@@ -3,6 +3,7 @@
 
 #include<QList>
 #include<QString>
+#include"glist.h"
 #include"food.h"
 
 class Dish : public Food {
