@@ -8,7 +8,7 @@ private:
     float capacity;
 
 public:
-    Beverage();
+    Beverage(const QString&, float, const QString&, float);
     virtual ~Beverage();
 
     //get method

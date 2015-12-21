@@ -13,7 +13,7 @@ private:
     QString category;
 
 public:
-    Food(QString,float,QString);
+    Food(const QString&,float,const QString&);
     virtual ~Food() = 0;
 
     //metodi get
@@ -22,9 +22,9 @@ public:
     QString getCategory() const;
 
     //metodi set
-    void setName(QString);
+    void setName(const QString&);
     void setPrice(float);
-    void setCategory(QString);
+    void setCategory(const QString&);
 
     //overloading operatori
     bool operator==(const Food&) const;

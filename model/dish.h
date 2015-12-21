@@ -10,22 +10,22 @@ private:
     QList<QString> ingredients;
 
     //private methods
-    QString* findIngredient(QString) const;
+    int findIngredient(const QString&) const;
 
 public:
-    Dish();
+    Dish(const QString&, float, const QString&);
     virtual ~Dish();
 
     //get method
     QList<QString> getIngredients() const;
 
     //set method
-    void setIngredients(QList<QString>);
+    void setIngredients(const QList<QString>&);
 
     //edit ingredients method
-    void addIngredient(QString);
-    void removeIngredient(QString);
-    void editIngredient(QString,QString);
+    void addIngredient(const QString&);
+    void removeIngredient(const QString&);
+    void editIngredient(const QString&,const QString&);
 
 };
 
