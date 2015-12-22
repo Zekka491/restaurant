@@ -9,5 +9,4 @@ SOURCES += $$PWD/main.cpp \
 HEADERS += $$PWD/food.h \
     $$PWD/dish.h \
     $$PWD/beverage.h \
-    $$PWD/seba.h \
     $$PWD/glist.h

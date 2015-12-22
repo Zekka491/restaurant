@@ -5,11 +5,11 @@ Dish::Dish(const QString& name, float price, const QString& category) : Food(nam
 Dish::~Dish() {}
 
 //getter & setter
-QList<QString> Dish::getIngredients() const {
+GList<QString> Dish::getIngredients() const {
     return ingredients;
 }
 
-void Dish::setIngredients(const QList<QString>& _ingredients) {
+void Dish::setIngredients(const GList<QString>& _ingredients) {
     ingredients = _ingredients;
 }
 
@@ -22,7 +22,7 @@ void Dish::setIngredients(const QList<QString>& _ingredients) {
  */
 void Dish::addIngredient(const QString& ingredientToAdd) {
     if(findIngredient(ingredientToAdd) == -1)
-        ingredients.append(ingredientToAdd);
+        ingredients.push_back(ingredientToAdd);
 }
 
 /**
@@ -33,9 +33,9 @@ void Dish::addIngredient(const QString& ingredientToAdd) {
  * @param ingredientToRemove    name of the ingredient to remove
  */
 void Dish::removeIngredient(const QString& ingredientToRemove) {
-    int indexIngredient = findIngredient(ingredientToRemove);
-    if(indexIngredient != -1)
-        ingredients.removeAt(indexIngredient);
+    GList<QString>::iterator itIngredient = findIngredient(ingredientToRemove);
+    if(itIngredient)
+        ingredients.erase(itIngredient);
 }
 
 /**
@@ -47,9 +47,9 @@ void Dish::removeIngredient(const QString& ingredientToRemove) {
  * @param newIngredient     new name of the ingredients
  */
 void Dish::editIngredient(const QString& oldIngredient, const QString& newIngredient) {
-    int indexIngredient = findIngredient(oldIngredient);
-    if(indexIngredient != -1)
-        ingredients[indexIngredient] = newIngredient;
+    GList<QString>::iterator itIngredient = findIngredient(oldIngredient);
+    if(itIngredient)
+        *itIngredient = newIngredient;
 }
 
 /**
@@ -60,17 +60,15 @@ void Dish::editIngredient(const QString& oldIngredient, const QString& newIngred
  * @brief Dish::findIngredient
  * @param ingredientToFind
  * @return      ex of QString with specified value,
- *              -1 otherwise
+ *              0 otherwise
  */
-int Dish::findIngredient(const QString& ingredientToFind) const{
-    bool trovato = false;
-    int i;
-    for(i = 0; i < ingredients.size() && !trovato; i++) {
-        trovato = ingredients[i] == ingredientToFind;
+GList<QString>::iterator Dish::findIngredient(const QString& ingredientToFind) const{
+    GList<QString>::iterator it = ingredients.begin();
+    while(it != ingredients.end()) {
+        if(*it == ingredientToFind)
+            return it;
+        it++;
     }
-    if(trovato)
-        return i - 1;
-    else
-        return -1;
+    return it;
 }
 

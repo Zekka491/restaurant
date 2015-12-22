@@ -118,6 +118,9 @@ public:
     void merge(GList&);
     void reverse();
     void sort();
+
+    void print();
+    void print(iterator);
 };
 
 /**
@@ -406,19 +409,19 @@ template<class T> typename GList<T>::iterator GList<T>::erase(iterator itStart, 
 }
 
 template<class T> void GList<T>::push_back(const value_type& t) {
-
+    insert(end(),t);
 }
 
 template<class T> void GList<T>::pop_back() {
-
+    erase(back());
 }
 
 template<class T> void GList<T>::push_front(const value_type& t) {
-
+    insert(begin(),t);
 }
 
 template<class T> void GList<T>::pop_front() {
-
+    erase(begin());
 }
 
 template<class T> void GList<T>::clear() {
@@ -426,7 +429,29 @@ template<class T> void GList<T>::clear() {
 }
 
 template<class T> void GList<T>::merge(GList<T>& list) {
-
+    sort();
+    if(this == &list)
+        return;
+    list.sort();
+    iterator myListIt = begin();
+    iterator listIt = list.begin();
+    while(listIt){
+        if(!myListIt) {
+            while(listIt) {
+                insert(myListIt,*listIt);
+                list.pop_front();
+            }
+        }
+        else {
+            if(*listIt < *myListIt) {
+                insert(myListIt,*listIt);
+                list.pop_front();
+                listIt = list.begin();
+            } else {
+                myListIt++;
+            }
+        }
+    }
 }
 
 template<class T> void GList<T>::reverse() {
@@ -447,8 +472,73 @@ template<class T> void GList<T>::reverse() {
     first = previousItem;
 }
 
+/**
+ *  this method uses the INSERTION SORT algorithm to order the list
+ */
 template<class T> void GList<T>::sort() {
+    iterator itCurrent;
+    iterator itAux = begin();
+    itAux++;
+    for(itAux; itAux != end(); ) {
+        itCurrent = itAux;
+        itAux.pointer = itAux.pointer->next.pointerItem;
+        value_type currentValue = itCurrent.pointer->info;
+        iterator itPrevious;
+        itPrevious.pointer = itCurrent.pointer->previous;
+        while(itPrevious != 0 && itPrevious.pointer->info > currentValue){
+            SmartP prePreviousItem = itPrevious.pointer->previous;
+            SmartP nextItem = itCurrent.pointer->next;
+            if(!prePreviousItem) {
+                itCurrent.pointer->next = itPrevious.pointer;
+                itCurrent.pointer->previous = 0;
+                first = itCurrent.pointer;
+            }
+            else {
+                itCurrent.pointer->next = itPrevious.pointer;
+                itCurrent.pointer->previous = prePreviousItem.pointerItem;
+                prePreviousItem->next = itCurrent.pointer;
+            }
+            if(!nextItem) {
+                last = itPrevious.pointer;
+                itPrevious.pointer->next = end().pointer;
+                iterator a;
+                a.pointer = prePreviousItem.pointerItem;
+            }
+            else {
+                itPrevious.pointer->next = nextItem;
+                itCurrent.pointer->next = itPrevious.pointer;
+                nextItem->previous = itPrevious.pointer;
+            }
+            itPrevious.pointer->previous = itCurrent.pointer;
+            itPrevious.pointer = itCurrent.pointer->previous;
+        }
+    }
+}
 
+template<class T> void GList<T>::print() {
+    if(begin())
+        for(typename GList<T>::iterator i=begin();i!=end(); i++) {
+            cout<<"NODO: "<<*i;
+            if(i.pointer->previous)
+                cout<<"\n - PRE: "<<i.pointer->previous->info;
+            if(i.pointer->next)
+                cout<<"\n - NEXT: "<<i.pointer->next->info<<endl;
+        }
+    else
+        cout<<"Lista vuota";
+    cout<<endl;
+}
+
+template<class T> void GList<T>::print(iterator i) {
+    if(i) {
+    cout<<"NODO: "<<*i<<endl;
+        if(i.pointer->previous)
+            cout<<" - PRE: "<<i.pointer->previous->info<<endl;
+        if(i.pointer->next)
+            cout<<" - NEXT: "<<i.pointer->next->info<<endl;
+    }
+    else
+        cout<<"iteratore sbagliato"<<endl;
 }
 
 #endif // GLIST_H

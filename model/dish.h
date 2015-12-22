@@ -1,27 +1,26 @@
 #ifndef DISH_H
 #define DISH_H
 
-#include<QList>
 #include<QString>
 #include"glist.h"
 #include"food.h"
 
 class Dish : public Food {
 private:
-    QList<QString> ingredients;
+    GList<QString> ingredients;
 
     //private methods
-    int findIngredient(const QString&) const;
+    GList<QString>::iterator findIngredient(const QString&) const;
 
 public:
     Dish(const QString&, float, const QString&);
     virtual ~Dish();
 
     //get method
-    QList<QString> getIngredients() const;
+    GList<QString> getIngredients() const;
 
     //set method
-    void setIngredients(const QList<QString>&);
+    void setIngredients(const GList<QString>&);
 
     //edit ingredients method
     void addIngredient(const QString&);
