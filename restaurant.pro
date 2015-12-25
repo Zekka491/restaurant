@@ -5,6 +5,7 @@
 #-------------------------------------------------
 include(view/view.pri)
 include(model/model.pri)
+include(json/json.pri)
 
 QT       += core gui
 
@@ -12,4 +13,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = ristorante
 TEMPLATE = app
+
+SOURCES += main.cpp
 

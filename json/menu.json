@@ -1,0 +1,26 @@
+{
+    "menu":[
+        {
+            "name":"Margherita",
+            "price":5.5,
+            "category":"pizza",
+            "ingredients":[
+                "pomodoro","mozzarella"
+            ]
+        },
+        {
+            "name":"Viennese",
+            "price":7.0,
+            "category":"pizza",
+            "ingredients":[
+                "pomodoro","mozzarella","wurstel"
+            ]
+        },
+        {
+            "name":"Coca-Cola",
+            "price":3.0,
+            "category":"bibita",
+            "capacity":0.33
+        }
+    ]
+}

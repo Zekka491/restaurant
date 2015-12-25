@@ -2,6 +2,8 @@
 #define FOOD_H
 
 #include<QString>
+#include<iostream>
+using namespace std;
 
 /**
  * @brief The Food class
@@ -9,27 +11,33 @@
 class Food {
 private:
     QString name;
-    float price;
+    double price;
     QString category;
 
 public:
-    Food(const QString&,float,const QString&);
+    Food();
+    Food(const QString&,double,const QString&);
     virtual ~Food() = 0;
 
     //metodi get
     QString getName() const;
-    float getPrice() const;
+    double getPrice() const;
     QString getCategory() const;
 
     //metodi set
     void setName(const QString&);
-    void setPrice(float);
+    void setPrice(double);
     void setCategory(const QString&);
 
     //overloading operatori
-    bool operator==(const Food&) const;
-    bool operator!=(const Food&) const;
+    virtual bool operator==(const Food&) const;
+    virtual bool operator!=(const Food&) const;
+    virtual bool operator<(const Food&) const;
+    virtual bool operator<=(const Food&) const;
+    virtual bool operator>(const Food&) const;
+    virtual bool operator>=(const Food&) const;
 
+    friend ostream& operator<<(ostream&,const Food&);
 };
 
 #endif // FOOD_H

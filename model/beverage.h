@@ -1,21 +1,28 @@
 #ifndef BEVERAGE_H
 #define BEVERAGE_H
 
+#include<QJsonObject>
 #include"food.h"
 
 class Beverage : public Food {
 private:
-    float capacity;
+    double capacity;
 
 public:
-    Beverage(const QString&, float, const QString&, float);
+    Beverage();
+    Beverage(const QString&, double, const QString&, double);
     virtual ~Beverage();
 
     //get method
-    float getCapacity() const;
+    double getCapacity() const;
 
     //set method
-    void setCapacity(float);
+    void setCapacity(double);
+
+    void read(const QJsonObject&);
+    void write(QJsonObject&) const;
+
+    friend ostream& operator<<(ostream&,const Beverage&);
 };
 
 #endif // BEVERAGE_H
