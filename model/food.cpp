@@ -99,7 +99,7 @@ bool Food::operator>=(const Food& food) const {
 ostream& operator<<(ostream& os, const Food& dish) {
     os << "printFood" <<endl;
     os <<dish.getName().toStdString()<<endl;
-    os <<"  Prezzo: "<<dish.getPrice()<<"€"<<endl;
+    os <<"  Prezzo: "<<dish.getPrice()<<" euro"<<endl;
     os <<"  Categoria: "<<dish.getCategory().toStdString()<<endl;
     return os;
 }

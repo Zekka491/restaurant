@@ -1,5 +1,5 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef ACTOR_H
+#define ACTOR_H
 
 #include<QFile>
 #include<QJsonDocument>
@@ -9,20 +9,23 @@
 #include"dish.h"
 #include"beverage.h"
 
-class Menu {
+class Actor {
 private:
     GList<Food*> menu;
+    Order order;
 
 public:
-    Menu();
+    Actor();
 
-    void newMenu();
+    GList<Food*> getMenu() const;
+
+    //void newMenu();
     bool loadMenu();
-    //bool saveMenu() const;
+    bool saveMenu() const;
 
     void read(const QJsonObject&);
-    //void write(QJsonObject&) const;
+    void write(QJsonObject&) const;
 
 };
 
-#endif // MENU_H
+#endif // ACTOR_H

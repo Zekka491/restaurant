@@ -4,6 +4,7 @@
 #include"glist.h"
 #include"dish.h"
 #include"beverage.h"
+#include"actor.h"
 
 using namespace std;
 int main()//int argc, char *argv[])
@@ -16,7 +17,7 @@ int main()//int argc, char *argv[])
 
 
 
-    Food* viennese = new Dish("Viennese",7.50,"Pizza");
+    /*Food* viennese = new Dish("Viennese",7.50,"Pizza");
     Dish* newViennese;
     if(dynamic_cast<Dish*>(viennese)) {
         newViennese = static_cast<Dish*>(viennese);
@@ -40,5 +41,24 @@ int main()//int argc, char *argv[])
     if(*newViennese>*margherita)
         cout<<"confronto vero"<<endl;
     else
-        cout<<"confronto falso"<<endl;
+        cout<<"confronto falso"<<endl;*/
+
+    Actor* patroMenu = new Actor();
+    patroMenu->loadMenu();
+    GList<Food*> menu = patroMenu->getMenu();
+    GList<Food*>::iterator it;
+    for(it=menu.begin(); it!=menu.end(); it++) {
+        cout<<"piatto : ";
+        if(dynamic_cast<Dish*>(*it)) {
+            Dish* dish = static_cast<Dish*>(*it);
+            cout<<*dish<<endl;
+        } else {
+            Beverage* beverage = static_cast<Beverage*>(*it);
+            cout<<*beverage<<endl;
+        }
+        //carica i piatti e le bavande invertite
+    }
+
+    //patroMenu->saveMenu();
+
 }
