@@ -6,6 +6,10 @@ GList<Food*> Actor::getMenu() const {
     return menu;
 }
 
+Order* Actor::getOrder() {
+    return &order;
+}
+
 bool Actor::loadMenu() {
     QFile loadFile(QStringLiteral("C:/Users/Mattia/Documents/Università/p2/progetto15-16/ristorante/json/menu.json"));
 

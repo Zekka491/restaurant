@@ -1,5 +1,5 @@
-//#include "loginwidget.h"
-//#include <QApplication>
+#include "mainwidget.h"
+#include <QApplication>
 #include<iostream>
 #include"glist.h"
 #include"dish.h"
@@ -7,15 +7,14 @@
 #include"actor.h"
 
 using namespace std;
-int main()//int argc, char *argv[])
-{
-    /*QApplication a(argc, argv);
-    LoginWidget w;
+
+int main(int argc, char *argv[]) {
+    QApplication a(argc, argv);
+    MainWidget w;
+
     w.show();
 
-    return a.exec();*/
-
-
+    return a.exec();
 
     /*Food* viennese = new Dish("Viennese",7.50,"Pizza");
     Dish* newViennese;
@@ -41,7 +40,7 @@ int main()//int argc, char *argv[])
     if(*newViennese>*margherita)
         cout<<"confronto vero"<<endl;
     else
-        cout<<"confronto falso"<<endl;*/
+        cout<<"confronto falso"<<endl;
 
     Actor* patroMenu = new Actor();
     patroMenu->loadMenu();
@@ -56,9 +55,9 @@ int main()//int argc, char *argv[])
             Beverage* beverage = static_cast<Beverage*>(*it);
             cout<<*beverage<<endl;
         }
-        //carica i piatti e le bavande invertite
+
     }
 
-    //patroMenu->saveMenu();
+    patroMenu->saveMenu();*/
 
 }

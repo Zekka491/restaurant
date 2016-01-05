@@ -10,11 +10,14 @@ private:
     GList<OrderItem*> items;
 
 public:
+
     Order();
 
-    void addItem(const OrderItem&);
-    void removeItem(const OrderItem&);
+    GList<OrderItem*> getItems();
+    void addItem(OrderItem*);
+    void removeItem(int id);
     GList<OrderItem*>::iterator findItem(int id);
+    double getTotal() const;
 };
 
 #endif // ORDER_H

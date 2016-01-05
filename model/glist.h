@@ -343,18 +343,20 @@ template<class T> typename GList<T>::iterator GList<T>::back() const {
 template<class T> typename GList<T>::iterator GList<T>::insert(iterator it, const value_type& t) {
     Item* newItem = new Item(t,it.pointer);
     Item* prevItem = last;
-
     if(it) {
         prevItem = it.pointer->previous;
         it.pointer->previous = newItem;
     }
-    else
+    else {
         last = newItem;
+    }
     newItem->previous = prevItem;
-    if(prevItem)
+    if(prevItem) {
         prevItem->next = newItem;
-    else
+    }
+    else {
         first = newItem;
+    }
     dimension++;
 
     iterator aux;
@@ -382,21 +384,25 @@ template<class T> typename GList<T>::iterator GList<T>::erase(iterator it) {
         aux.pointer = 0;
         return aux;
     }
-    Item* currentItem = it.pointer;
-    Item* previousItem = currentItem->previous;
-    Item* nextItem = currentItem->next.pointerItem;
-    if(previousItem)
-        previousItem->next = nextItem;
-    else
+    SmartP currentItem = it.pointer;
+    SmartP previousItem = currentItem.pointerItem->previous;
+    SmartP nextItem = currentItem.pointerItem->next.pointerItem;
+    if(previousItem) {
+        previousItem.pointerItem->next = nextItem;
+    }
+    else {
         first = nextItem;
+    }
 
-    if(nextItem)
-        nextItem->previous = previousItem;
-    else
-        last = previousItem;
+    if(nextItem) {
+        nextItem.pointerItem->previous = previousItem.pointerItem;
+    }
+    else {
+        last = previousItem.pointerItem;
+    }
 
     dimension--;
-    aux.pointer = nextItem;
+    aux.pointer = nextItem.pointerItem;
     return aux;
 }
 
@@ -518,11 +524,11 @@ template<class T> void GList<T>::sort() {
 template<class T> void GList<T>::print() {
     if(begin())
         for(typename GList<T>::iterator i=begin();i!=end(); i++) {
-            cout<<"NODO: "<<*i;
+            cout<<"NODO: "<<(*i).toStdString();
             if(i.pointer->previous)
-                cout<<"\n - PRE: "<<i.pointer->previous->info;
+                cout<<"\n - PRE: "<<(i.pointer->previous->info).toStdString();
             if(i.pointer->next)
-                cout<<"\n - NEXT: "<<i.pointer->next->info<<endl;
+                cout<<"\n - NEXT: "<<(i.pointer->next->info).toStdString()<<endl;
         }
     else
         cout<<"Lista vuota";

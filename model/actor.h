@@ -8,6 +8,7 @@
 #include"food.h"
 #include"dish.h"
 #include"beverage.h"
+#include"order.h"
 
 class Actor {
 private:
@@ -18,6 +19,9 @@ public:
     Actor();
 
     GList<Food*> getMenu() const;
+    Order* getOrder();
+
+    GList<Food*>::iterator findFood();
 
     //void newMenu();
     bool loadMenu();
