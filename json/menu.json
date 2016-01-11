@@ -1,6 +1,12 @@
 {
     "menu": [
         {
+            "capacity": 0.33000000000000002,
+            "category": "bibita",
+            "name": "Coca-Cola",
+            "price": 3
+        },
+        {
             "category": "pizza",
             "ingredients": [
                 "pomodoro",
@@ -18,12 +24,7 @@
             ],
             "name": "Viennese",
             "price": 7
-        },
-        {
-            "capacity": 0.33000000000000002,
-            "category": "bibita",
-            "name": "Coca-Cola",
-            "price": 3
         }
+
     ]
 }

@@ -32,3 +32,7 @@ double Order::getTotal() const {
     }
     return total;
 }
+
+void Order::clear() {
+    items.clear();
+}

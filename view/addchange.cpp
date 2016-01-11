@@ -4,7 +4,7 @@
 #include <QMenu>
 #include <QAction>
 
-AddChange::AddChange(QWidget *parent) : QWidget(parent) {
+AddChange::AddChange(int _function, QWidget *parent) : function(_function), QWidget(parent) {
     QVBoxLayout* mainLayout = new QVBoxLayout;
     QMenuBar* menuBar = new QMenuBar;
 
@@ -29,15 +29,18 @@ AddChange::AddChange(QWidget *parent) : QWidget(parent) {
 void AddChange::createMainGroupBox() {
     vGroupBox = new QGroupBox;
     QVBoxLayout* layout = new QVBoxLayout;
-    QGroupBox* checkBoxGB = new QGroupBox;
-    QHBoxLayout* checkBoxLayout = new QHBoxLayout(checkBoxGB);
-    add = new QRadioButton("Add",this);
-    add->setChecked(true);
-    remove = new QRadioButton("Remove",this);
-    checkBoxLayout->addWidget(add);
-    checkBoxLayout->addWidget(remove);
-    checkBoxGB->setLayout(checkBoxLayout);
+    if(!function) {
+        QGroupBox* checkBoxGB = new QGroupBox;
+        QHBoxLayout* checkBoxLayout = new QHBoxLayout(checkBoxGB);
+        add = new QRadioButton("Add",this);
+        add->setChecked(true);
+        remove = new QRadioButton("Remove",this);
+        checkBoxLayout->addWidget(add);
+        checkBoxLayout->addWidget(remove);
+        checkBoxGB->setLayout(checkBoxLayout);
 
+        layout->addWidget(checkBoxGB);
+    }
     QGroupBox* textGB = new QGroupBox;
     QHBoxLayout* textLayout = new QHBoxLayout(textGB);
     label = new QLabel("change:");
@@ -49,7 +52,6 @@ void AddChange::createMainGroupBox() {
     submit = new QPushButton("Submit");
     connect(submit,SIGNAL(clicked()),this,SLOT(readChange()));
 
-    layout->addWidget(checkBoxGB);
     layout->addWidget(textGB);
     layout->addWidget(submit);
     vGroupBox->setLayout(layout);
@@ -57,13 +59,20 @@ void AddChange::createMainGroupBox() {
 
 void AddChange::readChange() {
     if(!change->text().isEmpty()) {
-        if(add->isChecked()) {
-            emit sendNewChange(&(QString("+ ").append(change->text())));
+        if(function) {
+            emit sendNewChange(&(QString("").append(change->text())));
         } else {
-            emit sendNewChange(&(QString("- ").append(change->text())));
+            if(add->isChecked()) {
+                emit sendNewChange(&(QString("+ ").append(change->text())));
+            } else {
+                emit sendNewChange(&(QString("- ").append(change->text())));
+            }
         }
         close();
-    } else {
-
     }
+}
+
+void AddChange::closeEvent(QCloseEvent* event) {
+    emit closeAddChange(true);
+    event->accept();
 }

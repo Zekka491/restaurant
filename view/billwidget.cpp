@@ -20,5 +20,6 @@ BillWidget::BillWidget(Order* _order, QWidget *parent) : order(_order), QWidget(
 }
 
 void BillWidget::paid() {
-
+    emit closeBill();
+    close();
 }

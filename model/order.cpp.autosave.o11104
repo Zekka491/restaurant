@@ -1,0 +1,21 @@
+#include "order.h"
+
+Order::Order() {}
+
+void Order::addItem(const OrderItem& item) {
+    items.push_back(item);
+}
+
+void Order::removeItem(int id) {
+    items.erase(findItem(id));
+}
+
+GList<OrderItem>::iterator Order::findItem(int id) {
+    GList<OrderItem>::iterator it;
+    for(it = items.begin(); it != items.end(); it++) {
+        if(*it == id) {
+            return it;
+        }
+    }
+    return it;
+}

@@ -21,7 +21,10 @@ public:
     GList<Food*> getMenu() const;
     Order* getOrder();
 
-    GList<Food*>::iterator findFood();
+
+    GList<Food*>::iterator findFood(Food*);
+    void addFood(Food*);
+    void removeFood(Food*);
 
     //void newMenu();
     bool loadMenu();

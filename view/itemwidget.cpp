@@ -95,27 +95,29 @@ void ItemWidget::createMainGroupBox() {
 }
 
 void ItemWidget::selectFood() {
-    MenuWidget* newItem = new MenuWidget(actor);
+    MenuWidget* newItem = new MenuWidget(actor,0);
     newItem->show();
-    foodBtn->setEnabled(false);
+    this->setEnabled(false);
+    //foodBtn->setEnabled(false);
     connect(newItem,SIGNAL(food(Food*)),this,SLOT(newFood(Food*)));
-    connect(newItem,SIGNAL(closeMenu(bool)),foodBtn,SLOT(setEnabled(bool)));
+    connect(newItem,SIGNAL(closeMenu(bool)),this,SLOT(setEnabled(bool)));
 }
 
 void ItemWidget::writeChange() {
     AddChange* newItem = new AddChange();
     newItem->show();
-
+    this->setEnabled(false);
     connect(newItem,SIGNAL(sendNewChange(QString*)),this,SLOT(addChange(QString*)));
+    connect(newItem,SIGNAL(closeAddChange(bool)),this,SLOT(setEnabled(bool)));
 }
 
 void ItemWidget::newFood(Food *food) {
+    this->setEnabled(true);
     selectFoodLbl->setText(food->getName());
     orderItem->setFood(food);
 }
 
 void ItemWidget::addChange(QString *myString) {
-    foodBtn->setEnabled(true);
     QWidget* child;
     if(listLbl.empty()) {
         child = listLayout->takeAt(0)->widget();

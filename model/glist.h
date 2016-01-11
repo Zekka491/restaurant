@@ -39,6 +39,7 @@ private:
 
         Item();
         Item(const value_type&,SmartP =0);
+        ~Item();
     };
 
     SmartP first;
@@ -139,8 +140,11 @@ template<class T> GList<T>::SmartP::SmartP(const SmartP& sp) : pointerItem(sp.po
 template<class T> GList<T>::SmartP::~SmartP() {
     if(pointerItem) {
         pointerItem->references--;
-        if(pointerItem->references == 0)
+        cout<<"riferimenti "<<pointerItem->references<<endl;
+        if(pointerItem->references == 0) {
+            cout<<"delete"<<endl;
             delete pointerItem;
+        }
     }
 }
 
@@ -182,10 +186,11 @@ template<class T> GList<T>::SmartP::operator bool() {
 /**
  * Item methods
  */
-template<class T> GList<T>::Item::Item() : next(0),previous(0) {}
+template<class T> GList<T>::Item::Item() : next(0),previous(0),references(0) {}
 
-template<class T> GList<T>::Item::Item(const value_type& value, SmartP sp) : info(value), next(sp), previous(0) {}
+template<class T> GList<T>::Item::Item(const value_type& value, SmartP sp) : info(value), next(sp), previous(0), references(0) {}
 
+template<class T> GList<T>::Item::~Item() { cout<<"delete Item"<<endl;}
 /**
  * iterator methods
  */
@@ -213,12 +218,17 @@ template<class T> typename GList<T>::iterator GList<T>::iterator::operator++(int
 template<class T> typename GList<T>::iterator& GList<T>::iterator::operator--() {
     if(pointer)
         pointer = pointer->previous;
+    else
+        pointer = last;
     return *this;
 }
 
 template<class T> typename GList<T>::iterator GList<T>::iterator::operator--(int n) {
     iterator aux = *this;
-    --(*this);
+    if(pointer)
+        --(*this);
+    else
+        this->pointer = last;
     return aux;
 }
 
@@ -400,9 +410,11 @@ template<class T> typename GList<T>::iterator GList<T>::erase(iterator it) {
     else {
         last = previousItem.pointerItem;
     }
-
+    //cout<<"dim    pre: "<<dimension;
     dimension--;
+    //cout<<"     post: "<<dimension<<endl;
     aux.pointer = nextItem.pointerItem;
+    //delete currentItem.pointerItem;
     return aux;
 }
 
@@ -518,7 +530,23 @@ template<class T> void GList<T>::sort() {
             itPrevious.pointer->previous = itCurrent.pointer;
             itPrevious.pointer = itCurrent.pointer->previous;
         }
+    }/*
+    iterator p=begin();
+    iterator* it=new iterator[dimension];
+    for(unsigned int i=0;i<dimension;i++) {
+        it[i].pointer=p.pointer;
+        p++;
     }
+    for(unsigned int j=1;j<dimension;j++) {
+        int i=j-1;
+        value_type elem = *it[j];
+        while(i>=0 && elem<*it[i]) {
+            *it[i+1]=*it[i];
+            i--;
+        }
+        *it[i+1]=elem;
+    }
+    cout<<"FINE SORT"<<endl;*/
 }
 
 template<class T> void GList<T>::print() {

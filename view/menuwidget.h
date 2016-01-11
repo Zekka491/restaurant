@@ -17,7 +17,7 @@ class MenuItemWidget;
 class MenuWidget : public QWidget {
     Q_OBJECT
 public:
-    explicit MenuWidget(Actor*, QWidget *parent = 0);
+    explicit MenuWidget(Actor*, int, QWidget *parent = 0);
 
 signals:
     void food(Food*);
@@ -25,11 +25,17 @@ signals:
 
 public slots:
     void selectFood(Food*);
+    void removeFood(Food*);
 
 private:
     Actor* actor;
+    int function;
 
     QGroupBox* vGroupBox;
+    QVBoxLayout* layout;
+    QScrollArea* scroll;
+    GList<QGroupBox*> categoryGB;
+    GList<QVBoxLayout*> categoryLayout;
     GList<MenuItemWidget*> itemList;
 
     void createMainGroupBox();

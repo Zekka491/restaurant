@@ -18,6 +18,7 @@ public:
     void removeItem(int id);
     GList<OrderItem*>::iterator findItem(int id);
     double getTotal() const;
+    void clear();
 };
 
 #endif // ORDER_H

@@ -14,6 +14,7 @@ public:
     explicit BillWidget(Order*, QWidget *parent = 0);
 
 signals:
+    void closeBill();
 
 public slots:
     void paid();

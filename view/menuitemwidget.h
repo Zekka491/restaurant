@@ -14,6 +14,7 @@ class MenuItemWidget : public QWidget {
 public:
     explicit MenuItemWidget(Food*,QWidget *parent = 0);
 
+    QString text() const;
 signals:
     void valueButton(Food*);
 
@@ -23,10 +24,19 @@ public slots:
 private:
     Food* food;
 
-    QHBoxLayout* layout;
+    QVBoxLayout* mainLayout;
+    QGroupBox* mainGB;
+    QVBoxLayout* layout;
+    QGroupBox* labelGB;
+    QHBoxLayout* labelLayout;
+    QGroupBox* plusGB;
+    QHBoxLayout* plusLayout;
+
     QLabel* foodName;
     QLabel* foodPrice;
     QPushButton* selectFood;
+
+    void writePlus();
 
 };
 

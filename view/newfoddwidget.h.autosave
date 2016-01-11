@@ -1,0 +1,16 @@
+#ifndef NEWFODDWIDGET_H
+#define NEWFODDWIDGET_H
+
+#include <QWidget>
+
+class NewFoddWidget : public QWidget {
+    Q_OBJECT
+public:
+    explicit NewFoddWidget(QWidget *parent = 0);
+
+signals:
+
+public slots:
+};
+
+#endif // NEWFODDWIDGET_H

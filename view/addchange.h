@@ -9,19 +9,22 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QRadioButton>
+#include <QCloseEvent>
 
 class AddChange : public QWidget {
     Q_OBJECT
 public:
-    explicit AddChange(QWidget *parent = 0);
+    explicit AddChange(int = 0, QWidget *parent = 0);
 
 signals:
     void sendNewChange(QString*);
+    void closeAddChange(bool);
 
 public slots:
     void readChange();
 
 private:
+    int function;
 
     QGroupBox* vGroupBox;
     QLabel* label;
@@ -33,6 +36,7 @@ private:
 
     void createMainGroupBox();
 
+    void closeEvent(QCloseEvent*);
 
 };
 

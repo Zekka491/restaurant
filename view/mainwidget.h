@@ -13,6 +13,7 @@
 #include "itemwidget.h"
 #include "orderitemwidget.h"
 #include "billwidget.h"
+#include "newfoodwidget.h"
 
 class MainWidget : public QWidget {
     Q_OBJECT
@@ -26,6 +27,11 @@ public slots:
     void payBill();
     void showNewItem();
     void removeItem(int);
+    void restartView();
+    void addFood();
+    void removeFood();
+    void editFood();
+    void addFoodToMenu(Food*);
 
 signals:
 
@@ -34,6 +40,7 @@ private:
 
     //GUI
     QGroupBox* hGroupBox;
+    QVBoxLayout* mainLayout;
     QGroupBox* showOrderGB;
     QVBoxLayout* showOrderLayout;
     QGroupBox* editOrderGB;
@@ -47,7 +54,7 @@ private:
     QPushButton* payBillButton;
 
     void createMainGroupBox();
-    void createShowOrderGroupBox(QVBoxLayout*);
+    void createShowOrderGroupBox();
 
 };
 

@@ -5,7 +5,9 @@ Dish::Dish() : Food() {}
 
 Dish::Dish(const QString& name, double price, const QString& category) : Food(name,price,category) {}
 
-Dish::~Dish() {}
+Dish::~Dish() {
+    cout<<endl<<endl<<"~Dish()"<<endl<<endl;
+}
 
 //getter & setter
 GList<QString> Dish::getIngredients() const {

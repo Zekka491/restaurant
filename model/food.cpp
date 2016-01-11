@@ -4,7 +4,9 @@ Food::Food() : name(""), price(0), category("") {}
 
 Food::Food(const QString& _name,double _price,const QString& _category) : name(_name), price(_price), category(_category) {}
 
-Food::~Food() {}
+Food::~Food() {
+    cout<<endl<<endl<<"~Food()"<<endl<<endl;
+}
 
 QString Food::getName() const {
     return name;

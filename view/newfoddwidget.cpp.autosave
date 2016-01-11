@@ -1,0 +1,6 @@
+#include "newfoddwidget.h"
+
+NewFoddWidget::NewFoddWidget(QWidget *parent) : QWidget(parent) {
+    
+}
+

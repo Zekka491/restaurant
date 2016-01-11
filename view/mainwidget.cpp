@@ -8,14 +8,14 @@
 #include <QMessageBox>
 
 MainWidget::MainWidget(Actor* _actor, QWidget *parent) : actor(_actor), QWidget(parent) {
-    QVBoxLayout* mainLayout = new QVBoxLayout;
+    mainLayout = new QVBoxLayout;
     QMenuBar* menuBar = new QMenuBar;
 
-    actor->loadMenu();
 
     //menu 'File'
     QMenu* fileMenu = menuBar->addMenu(tr("File"));
     QAction* newOrder = fileMenu->addAction(tr("New order"));
+    connect(newOrder,SIGNAL(triggered()),this,SLOT(restartView()));
     fileMenu->addSeparator();
     QAction* closeAction = fileMenu->addAction(tr("Close"));
     connect(closeAction,SIGNAL(triggered()),this,SLOT(close()));
@@ -25,6 +25,9 @@ MainWidget::MainWidget(Actor* _actor, QWidget *parent) : actor(_actor), QWidget(
     QAction* addFood = menuMenu->addAction(tr("Add a food"));
     QAction* removeFood = menuMenu->addAction(tr("Remove a food"));
     QAction* editFood = menuMenu->addAction(tr("Edit a food"));
+    connect(addFood,SIGNAL(triggered()),this,SLOT(addFood()));
+    connect(removeFood,SIGNAL(triggered()),this,SLOT(removeFood()));
+    connect(editFood,SIGNAL(triggered()),this,SLOT(editFood()));
 
     createMainGroupBox();
 
@@ -47,7 +50,7 @@ void MainWidget::createMainGroupBox() {
 
     showOrderGB = new QGroupBox;
     showOrderLayout = new QVBoxLayout(showOrderGB);
-    createShowOrderGroupBox(showOrderLayout);
+    createShowOrderGroupBox();
     showOrderGB->setLayout(showOrderLayout);
     scroll = new QScrollArea;
     scroll->setWidgetResizable(true);
@@ -69,7 +72,7 @@ void MainWidget::createMainGroupBox() {
     hGroupBox->setLayout(layout);
 }
 
-void MainWidget::createShowOrderGroupBox(QVBoxLayout* layout) {
+void MainWidget::createShowOrderGroupBox() {
     GList<OrderItem*>::iterator it;
     if(actor->getOrder()->getItems().begin() == 0) {
         QLabel* emptyOrder = new QLabel("Empty order");
@@ -86,7 +89,6 @@ void MainWidget::createShowOrderGroupBox(QVBoxLayout* layout) {
 
 //Slots
 void MainWidget::addItem() {
-    OrderItem* item = new OrderItem;
     ItemWidget* newItem = new ItemWidget(actor);
     newItem->resize(500,300);
     this->hide();
@@ -96,7 +98,6 @@ void MainWidget::addItem() {
 }
 
 void MainWidget::showNewItem() {
-
     if(actor->getOrder()->getItems().size() == 1) {
         //remove QLabel 'empty order'
         QWidget* child = showOrderLayout->takeAt(0)->widget();
@@ -139,4 +140,38 @@ void MainWidget::removeItem(int id) {
 void MainWidget::payBill() {
     BillWidget* bill = new BillWidget(actor->getOrder());
     bill->show();
+    connect(bill,SIGNAL(closeBill()),this,SLOT(restartView()));
 }
+
+void MainWidget::restartView() {
+    actor->getOrder()->clear();
+    listItems.clear();
+    QWidget* child;
+    for(int i = 0; i < showOrderLayout->count();) {
+        child = showOrderLayout->takeAt(i)->widget();
+        showOrderLayout->removeWidget(child);
+        delete(child);
+    }
+    createShowOrderGroupBox();
+}
+
+void MainWidget::addFood() {
+    NewFoodWidget* addWidget = new NewFoodWidget(actor);
+    addWidget->show();
+    connect(addWidget,SIGNAL(sendNewFood(Food*)),this,SLOT(addFoodToMenu(Food*)));
+}
+
+void MainWidget::addFoodToMenu(Food* food) {
+    actor->addFood(food);
+}
+
+void MainWidget::removeFood() {
+    MenuWidget* removeWidget = new MenuWidget(actor,1);
+    removeWidget->show();
+}
+
+void MainWidget::editFood() {
+    MenuWidget* editWidget = new MenuWidget(actor,2);
+    editWidget->show();
+}
+

@@ -1,6 +1,9 @@
 #include "actor.h"
 
-Actor::Actor() {}
+Actor::Actor() {
+    loadMenu();
+    //menu.sort();
+}
 
 GList<Food*> Actor::getMenu() const {
     return menu;
@@ -8,6 +11,32 @@ GList<Food*> Actor::getMenu() const {
 
 Order* Actor::getOrder() {
     return &order;
+}
+
+GList<Food*>::iterator Actor::findFood(Food* food) {
+    GList<Food*>::iterator it;
+    for(it = menu.begin(); it != menu.end(); it++) {
+        if((*it) == food) {
+            return it;
+        }
+    }
+
+    return it;
+}
+
+void Actor::addFood(Food* food) {
+    GList<Food*>::iterator it;
+    for(it = menu.begin(); it != menu.end(); it++) {
+        if(*food < **it) {
+            menu.insert(it,food);
+            return;
+        }
+    }
+    menu.push_back(food);
+}
+
+void Actor::removeFood(Food* food) {
+    menu.erase(findFood(food));
 }
 
 bool Actor::loadMenu() {
