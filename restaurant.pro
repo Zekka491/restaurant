@@ -17,4 +17,3 @@ TEMPLATE = app
 RC_ICONS += icon.ico
 
 SOURCES += main.cpp
-

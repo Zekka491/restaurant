@@ -24,7 +24,7 @@ void OrderItemWidget::createEditBarGB(){
     editBarLayout = new QHBoxLayout;
 
     quantity = new QLabel(QString("Quantità: ").append(QString::number(orderItem->getQuantity())));
-    totalPrice = new QLabel(QString("Prezzo totale: ").append(QString::number(orderItem->getQuantity()*(orderItem->getVarPrice()+orderItem->getFood()->getPrice()),'f',2)));
+    totalPrice = new QLabel(QString("Prezzo totale: ").append(QString::number(orderItem->getQuantity()*(orderItem->getVarPrice()+orderItem->getFood()->getPrice()),'f',2)).append(QString(" €")));
     remove = new QPushButton("X");
     remove->setMaximumWidth(50);
     connect(remove,SIGNAL(clicked()),this,SLOT(removeItem()));
@@ -40,7 +40,7 @@ void OrderItemWidget::createLabelGB() {
     labelLayout = new QHBoxLayout;
 
     name = new QLabel(orderItem->getFood()->getName());
-    price = new QLabel(QString("Prezzo unitario: ").append(QString::number(orderItem->getVarPrice()+orderItem->getFood()->getPrice(),'f',2)));
+    price = new QLabel(QString("Prezzo unitario: ").append(QString::number(orderItem->getVarPrice()+orderItem->getFood()->getPrice(),'f',2)).append(QString(" €")));
 
     labelLayout->addWidget(name);
     labelLayout->addWidget(price);

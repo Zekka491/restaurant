@@ -25,18 +25,22 @@ GList<Food*>::iterator Actor::findFood(Food* food) {
 }
 
 void Actor::addFood(Food* food) {
+    cout<<"Add food"<<endl;
     GList<Food*>::iterator it;
     for(it = menu.begin(); it != menu.end(); it++) {
         if(*food < **it) {
             menu.insert(it,food);
-            return;
+            break;
         }
     }
-    menu.push_back(food);
+    if(it == menu.end())
+        menu.push_back(food);
+    saveMenu();
 }
 
 void Actor::removeFood(Food* food) {
     menu.erase(findFood(food));
+    saveMenu();
 }
 
 bool Actor::loadMenu() {
@@ -52,23 +56,25 @@ bool Actor::loadMenu() {
     QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
 
     read(loadDoc.object());
-
+    loadFile.close();
     return true;
 }
 
 bool Actor::saveMenu() const {
-    QFile saveFile(QStringLiteral("C:/Users/Mattia/Documents/Università/p2/progetto15-16/ristorante/json/menu.json"));
+    cout<<"save menu"<<endl;
+    QFile saveFile(QStringLiteral("json/menu.json"));
 
     if (!saveFile.open(QIODevice::WriteOnly)) {
         qWarning("Couldn't open save file.");
         return false;
     }
 
+    saveFile.resize(0);
     QJsonObject menuObject;
     write(menuObject);
     QJsonDocument saveDoc(menuObject);
     saveFile.write(saveDoc.toJson());
-
+    saveFile.close();
     return true;
 }
 

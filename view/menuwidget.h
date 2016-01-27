@@ -26,6 +26,8 @@ signals:
 public slots:
     void selectFood(Food*);
     void removeFood(Food*);
+    void editFood(Food*);
+    void updateMenu();
 
 private:
     Actor* actor;

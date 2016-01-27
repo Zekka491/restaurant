@@ -4,9 +4,7 @@ Food::Food() : name(""), price(0), category("") {}
 
 Food::Food(const QString& _name,double _price,const QString& _category) : name(_name), price(_price), category(_category) {}
 
-Food::~Food() {
-    cout<<endl<<endl<<"~Food()"<<endl<<endl;
-}
+Food::~Food() {}
 
 QString Food::getName() const {
     return name;
@@ -41,12 +39,10 @@ bool Food::operator!=(const Food& food) const {
 }
 
 bool Food::operator<(const Food& food) const {
-    cout<<"operator < food"<<endl;
     if(category.toLower() < food.getCategory().toLower()) {
         return true;
     } else {
         if(category.toLower() == food.getCategory().toLower()) {
-            cout<<"== ";
             if(name.toLower() < food.getName().toLower()) {
                 return true;
             } else {
@@ -98,10 +94,10 @@ bool Food::operator>=(const Food& food) const {
     return !(*this < food);
 }
 
-ostream& operator<<(ostream& os, const Food& dish) {
+ostream& operator<<(ostream& os, const Food& food) {
     os << "printFood" <<endl;
-    os <<dish.getName().toStdString()<<endl;
-    os <<"  Prezzo: "<<dish.getPrice()<<" euro"<<endl;
-    os <<"  Categoria: "<<dish.getCategory().toStdString()<<endl;
+    os <<food.getName().toStdString()<<endl;
+    os <<"  Prezzo: "<<food.getPrice()<<" euro"<<endl;
+    os <<"  Categoria: "<<food.getCategory().toStdString()<<endl;
     return os;
 }

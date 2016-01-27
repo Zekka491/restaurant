@@ -3,11 +3,11 @@
 
 #include<QString>
 #include<iostream>
+
+using std::cout;
+using std::endl;
 using namespace std;
 
-/**
- * @brief The Food class
- */
 class Food {
 private:
     QString name;

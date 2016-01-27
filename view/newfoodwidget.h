@@ -11,6 +11,7 @@
 #include <QScrollArea>
 #include <QRegExpValidator>
 #include <QMessageBox>
+#include <QCloseEvent>
 #include "actor.h"
 #include "glist.h"
 #include "changeitem.h"
@@ -19,21 +20,25 @@ class NewFoodWidget : public QWidget {
     Q_OBJECT
 public:
     explicit NewFoodWidget(Actor*,QWidget *parent = 0);
+    explicit NewFoodWidget(Actor*,Food*,QWidget *parent = 0);
 
 signals:
     void sendNewFood(Food*);
+    void closeNewFood(bool);
 
 public slots:
-    void dishLayout();
-    void beverageLayout();
+    void newDish();
+    void newBeverage();
     void showAddWidget();
     void addIngredient(QString*);
     void removeIngredient(const QString&);
     void saveDish();
+    void saveBeverage();
 
 private:
     Actor* actor;
-    //Food* food;
+
+    Food* food;
     Dish* dish;
     Beverage* beverage;
 
@@ -73,16 +78,21 @@ private:
 
 
     //beverage
-    /*QGroupBox* categoryGB;
-    QHBoxLayout* categoryLayout;
-    QLabel* categoryLbl;
-    QLineEdit* categoryTxt;*/
+    QGroupBox* capacityGB;
+    QHBoxLayout* capacityLayout;
+    QLabel* capacityLbl;
+    QLineEdit* capacityTxt;
 
 
     void saveFood(Food*);
-    void standardLayout();
+    void dishLayout(Dish*);
+    void beverageLayout(Beverage*);
+    void standardLayout(Food*);
     void clearLayout();
     void showIngredientsList();
+    void showIngredient(QString*);
+
+    void closeEvent(QCloseEvent*);
 
 };
 

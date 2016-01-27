@@ -12,8 +12,6 @@ ItemWidget::ItemWidget(Actor* _actor, QWidget *parent) : actor(_actor), orderIte
 
     //menu 'File'
     QMenu* fileMenu = menuBar->addMenu(tr("File"));
-    QAction* newOrder = fileMenu->addAction(tr("New order"));
-    fileMenu->addSeparator();
     QAction* closeAction = fileMenu->addAction(tr("Close"));
     connect(closeAction,SIGNAL(triggered()),this,SLOT(close()));
 
@@ -163,7 +161,7 @@ void ItemWidget::removeChange(QString string) {
 void ItemWidget::saveItem() {
     if(foodLbl->text().isEmpty() || quantityTxt->text().isEmpty()) {
         QMessageBox error;
-        error.critical(0,"Complete fields","Food and quantity field are required");
+        error.critical(0,"Complete fields","Food and quantity fields are required");
     } else {
         orderItem->setQuantity(quantityTxt->text().toInt());
         actor->getOrder()->addItem(orderItem);

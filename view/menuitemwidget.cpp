@@ -8,7 +8,7 @@ MenuItemWidget::MenuItemWidget(Food* _food, QWidget *parent) : food(_food), QWid
     labelGB = new QGroupBox;
     labelLayout = new QHBoxLayout;
     foodName = new QLabel(food->getName());
-    foodPrice = new QLabel(QString::number(food->getPrice(),'f',2));
+    foodPrice = new QLabel(QString::number(food->getPrice(),'f',2).append(QString(" €")));
     selectFood = new QPushButton("+");
     connect(selectFood,SIGNAL(clicked()),this,SLOT(getButton()));
     labelLayout->addWidget(foodName,0,Qt::AlignTop);
@@ -40,7 +40,7 @@ void MenuItemWidget::writePlus() {
     } else {
         Beverage* beverage = static_cast<Beverage*>(food);
         QLabel* label = new QLabel("Capacity:");
-        QLabel* capacity = new QLabel(QString::number(beverage->getCapacity(),'f',2));
+        QLabel* capacity = new QLabel(QString::number(beverage->getCapacity(),'f',2).append(QString(" L")));
         capacity->setMaximumWidth(50);
         plusLayout->addWidget(label,10);
         plusLayout->addWidget(capacity,80,Qt::AlignLeft);

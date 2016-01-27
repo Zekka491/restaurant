@@ -46,17 +46,6 @@ void MainWidget::createMainGroupBox() {
     hGroupBox = new QGroupBox;
     QHBoxLayout* layout = new QHBoxLayout;
 
-
-
-    showOrderGB = new QGroupBox;
-    showOrderLayout = new QVBoxLayout(showOrderGB);
-    createShowOrderGroupBox();
-    showOrderGB->setLayout(showOrderLayout);
-    scroll = new QScrollArea;
-    scroll->setWidgetResizable(true);
-    scroll->setWidget(showOrderGB);
-    scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-
     editOrderGB = new QGroupBox;
     editOrderLayout = new QVBoxLayout(editOrderGB);
     addItemButton = new QPushButton(tr("Add"));
@@ -66,6 +55,15 @@ void MainWidget::createMainGroupBox() {
     connect(addItemButton,SIGNAL(clicked()),this,SLOT(addItem()));
     connect(payBillButton,SIGNAL(clicked()),this,SLOT(payBill()));
     editOrderGB->setLayout(editOrderLayout);
+
+    showOrderGB = new QGroupBox;
+    showOrderLayout = new QVBoxLayout(showOrderGB);
+    createShowOrderGroupBox();
+    showOrderGB->setLayout(showOrderLayout);
+    scroll = new QScrollArea;
+    scroll->setWidgetResizable(true);
+    scroll->setWidget(showOrderGB);
+    scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
     layout->addWidget(scroll,30);
     layout->addWidget(editOrderGB,10);
@@ -77,6 +75,7 @@ void MainWidget::createShowOrderGroupBox() {
     if(actor->getOrder()->getItems().begin() == 0) {
         QLabel* emptyOrder = new QLabel("Empty order");
         showOrderLayout->addWidget(emptyOrder);
+        payBillButton->setEnabled(false);
     } else {
         for(it = actor->getOrder()->getItems().begin(); it != actor->getOrder()->getItems().end(); it++) {
             listItems.push_back(new OrderItemWidget(*it));
@@ -112,6 +111,7 @@ void MainWidget::showNewItem() {
     connect(*listItems.back(),SIGNAL(itemToRemove(int)),this,SLOT(removeItem(int)));
     showOrderLayout->addWidget(*listItems.back(),10);
     showOrderLayout->addWidget(new QLabel,90);
+    payBillButton->setEnabled(true);
 }
 
 void MainWidget::removeItem(int id) {
@@ -130,6 +130,7 @@ void MainWidget::removeItem(int id) {
                 delete(child);
                 showOrderLayout->addWidget(new QLabel("Empty order"),10);
                 showOrderLayout->addWidget(new QLabel,90);
+                payBillButton->setEnabled(false);
             }
             return;
         }
@@ -157,8 +158,11 @@ void MainWidget::restartView() {
 
 void MainWidget::addFood() {
     NewFoodWidget* addWidget = new NewFoodWidget(actor);
-    addWidget->show();
+    setEnabled(false);
     connect(addWidget,SIGNAL(sendNewFood(Food*)),this,SLOT(addFoodToMenu(Food*)));
+    connect(addWidget,SIGNAL(closeNewFood(bool)),this,SLOT(setEnabled(bool)));
+    addWidget->show();
+
 }
 
 void MainWidget::addFoodToMenu(Food* food) {
@@ -167,11 +171,15 @@ void MainWidget::addFoodToMenu(Food* food) {
 
 void MainWidget::removeFood() {
     MenuWidget* removeWidget = new MenuWidget(actor,1);
+    setEnabled(false);
+    connect(removeWidget,SIGNAL(closeMenu(bool)),this,SLOT(setEnabled(bool)));
     removeWidget->show();
 }
 
 void MainWidget::editFood() {
     MenuWidget* editWidget = new MenuWidget(actor,2);
+    setEnabled(false);
+    connect(editWidget,SIGNAL(closeMenu(bool)),this,SLOT(setEnabled(bool)));
     editWidget->show();
 }
 

@@ -26,7 +26,6 @@ public:
     void addFood(Food*);
     void removeFood(Food*);
 
-    //void newMenu();
     bool loadMenu();
     bool saveMenu() const;
 

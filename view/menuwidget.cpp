@@ -10,12 +10,16 @@ MenuWidget::MenuWidget(Actor* _actor, int _function, QWidget *parent) : actor(_a
 
     //menu 'File'
     QMenu* fileMenu = menuBar->addMenu(tr("File"));
-    QAction* newOrder = fileMenu->addAction(tr("New order"));
-    fileMenu->addSeparator();
     QAction* closeAction = fileMenu->addAction(tr("Close"));
     connect(closeAction,SIGNAL(triggered()),this,SLOT(close()));
-
+    vGroupBox = new QGroupBox;
+    layout = new QVBoxLayout;
     createMainGroupBox();
+    vGroupBox->setLayout(layout);
+    scroll = new QScrollArea;
+    scroll->setWidgetResizable(true);
+    scroll->setWidget(vGroupBox);
+    scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
     mainLayout->setMenuBar(menuBar);
     mainLayout->addWidget(scroll);
@@ -27,18 +31,11 @@ MenuWidget::MenuWidget(Actor* _actor, int _function, QWidget *parent) : actor(_a
 }
 
 void MenuWidget::createMainGroupBox() {
-    //cout<<"createMainGrouBox"<<endl;
-    vGroupBox = new QGroupBox;
-    layout = new QVBoxLayout;
     GList<Food*>::iterator it;
     GList<Food*>::iterator it2 = actor->getMenu().begin();
-    //cout<<"for item"<<endl;
     int counter = 0;
     for(it = actor->getMenu().begin(); it != actor->getMenu().end(); it++) {
-        //cout<<"count "<<counter<<endl;
-        //cout<<(*it)->getCategory().toStdString()<<" == "<<(*it2)->getCategory().toStdString()<<endl;
         if(it == actor->getMenu().begin() || (*it)->getCategory().toUpper() != (*it2)->getCategory().toUpper()) {
-            //cout<<"cambio categoria"<<endl;
             if(!categoryGB.empty())
                 (*categoryGB.back())->setLayout(*categoryLayout.back());
             categoryGB.push_back(new QGroupBox);
@@ -46,23 +43,17 @@ void MenuWidget::createMainGroupBox() {
             (*categoryLayout.back())->addWidget(new QLabel((*it)->getCategory().toUpper()),10);
 
         }
-        //cout<<"aggiungo widget"<<endl;
         itemList.push_back(new MenuItemWidget(*it));
-        //(*itemList.back())->setIndent(30);
         (*categoryLayout.back())->addWidget(*(itemList.back()),10);
-        //(*(itemList.back()))->setParent(*categoryLayout.back());
-        //cout<<"imposto signal - slot"<<endl;
         switch(function){
         case 0: connect((*itemList.back()),SIGNAL(valueButton(Food*)),this,SLOT(selectFood(Food*)));
             break;
         case 1: connect((*itemList.back()),SIGNAL(valueButton(Food*)),this,SLOT(removeFood(Food*)));
             break;
-        case 2: //connect((*itemList.back()),SIGNAL(valueButton(Food*)),this,SLOT(editFood(Food*)));
-            //cout<<endl<<endl<<"ECCOMI QUI"<<endl<<endl<<endl;
+        case 2: connect((*itemList.back()),SIGNAL(valueButton(Food*)),this,SLOT(editFood(Food*)));
             break;
         }
         if(it != actor->getMenu().begin()) {
-            //cout<<"incremento it2"<<endl;
             it2++;
         }
         counter++;
@@ -74,11 +65,6 @@ void MenuWidget::createMainGroupBox() {
         layout->addWidget(*itC,10);
     }
     layout->addWidget(new QLabel,90);
-    vGroupBox->setLayout(layout);
-    scroll = new QScrollArea;
-    scroll->setWidgetResizable(true);
-    scroll->setWidget(vGroupBox);
-    scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 }
 
 void MenuWidget::selectFood(Food* _food) {
@@ -87,18 +73,13 @@ void MenuWidget::selectFood(Food* _food) {
 }
 
 void MenuWidget::removeFood(Food* _food) {
-    //cout<<"Remove"<<endl;
     actor->removeFood(_food);
     GList<QVBoxLayout*>::iterator it;
     GList<QGroupBox*>::iterator itGB = categoryGB.begin();
-    //cout<<"category: "<<categoryLayout.size()<<endl;
     GList<MenuItemWidget*>::iterator itMIW = itemList.begin();
-    //cout<<"itemList: "<<itemList.size()<<endl;
     int countLayout = 0;
     for(it = categoryLayout.begin(); it != categoryLayout.end(); it++){
-        //cout<<"elementi per categoria: "<<(*it)->count()<<endl;
         for(int i = 0; i < (*it)->count(); i++) {
-            //cout<<"i: "<<i<<endl;
             QString string;
             QWidget* component = (*it)->itemAt(i)->widget();
             if(dynamic_cast<QLabel*>(component)) {
@@ -108,18 +89,13 @@ void MenuWidget::removeFood(Food* _food) {
                 MenuItemWidget* item = static_cast<MenuItemWidget*>(component);
                 string = item->text();
             }
-            //cout<<"confronto: "<<string.toStdString()<<" == "<<_food->getName().toStdString()<<endl;
             if(string == _food->getName()) {
-                //cout<<"trovato"<<endl;
-                //cout<<"itemList: "<<itemList.size()<<endl;
                 itemList.erase(itMIW);
-                //cout<<"itemList: "<<itemList.size()<<endl;
                 QVBoxLayout* parent = static_cast<QVBoxLayout*>(component->parentWidget()->layout());
                 QWidget* child = parent->takeAt(i)->widget();
                 parent->removeWidget(child);
                 delete(child);
                 if((*it)->count() == 1) {
-                    //cout<<"remove category"<<endl;
                     categoryGB.erase(itGB);
                     categoryLayout.erase(it);
                     QWidget* category = layout->takeAt(countLayout)->widget();
@@ -136,6 +112,30 @@ void MenuWidget::removeFood(Food* _food) {
         itGB++;
     }
 
+}
+
+void MenuWidget::editFood(Food* _food) {
+    NewFoodWidget* editFood = new NewFoodWidget(actor,_food);
+    setEnabled(false);
+    connect(editFood,SIGNAL(sendNewFood(Food*)),this,SLOT(updateMenu()));
+    connect(editFood,SIGNAL(closeNewFood(bool)),this,SLOT(setEnabled(bool)));
+    editFood->show();
+
+}
+
+void MenuWidget::updateMenu() {
+    setEnabled(true);
+    actor->saveMenu();
+    QWidget* child;
+    for(int i = 0; i < layout->count();) {
+        child = layout->takeAt(i)->widget();
+        layout->removeWidget(child);
+        delete(child);
+    }
+    categoryGB.clear();
+    categoryLayout.clear();
+    itemList.clear();
+    createMainGroupBox();
 }
 
 void MenuWidget::closeEvent(QCloseEvent* event) {

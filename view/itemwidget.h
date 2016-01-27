@@ -64,6 +64,7 @@ private:
 
     void createMainGroupBox();
     void printChanges();
+
     void closeEvent(QCloseEvent*);
 
 };
