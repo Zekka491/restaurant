@@ -1,0 +1,111 @@
+\documentclass[]{report}   % list options between brackets
+\usepackage{}              % list packages between braces
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{eurosym}
+\DeclareUnicodeCharacter{20AC}{\euro}
+
+% type user-defined commands here
+
+\begin{document}
+
+\title{Restaurant - Freedom}  	 % type title between braces
+\author{Mattia Zecchinato - Matricola 1006435}    	 % type author(s) between braces
+\date{01 Febbraio 2016}   		 % type date between braces
+\maketitle
+
+\begin{abstract}
+  Relazione del progetto didattico del corso di Programmazione ad oggetti A.A. 2015/2016 tenuto dal professor Ranzato Francesco presso l'Università degli Studi di Padova
+\end{abstract}
+
+\chapter{Progetto}         				% capitolo 1
+\section{Introduzione}     				% sezione 1.1
+Il progetto modella la gestione di una comanda di un ristorante.\\
+Alla comanda è permesso aggiungere solo piatti presenti nel menu, possono essere cibi e bevande. Ad ogni elemento aggiunto alla comanda è possibile applicare delle modifiche in aggiunta o rimozione, si è deciso che ad ogni modifica in aggiunta/rimozione venga aumentato/diminuito il prezzo per una cifra pari a 0.20€.\\
+Al pagamento del conto l'ordine viene chiuso e ne viene aperto uno nuovo.\\
+Il menu è invece salvato in un database utilizzando JSON, è permessa l'aggiunta, la rimozione e la modica di un piatto.\\
+Il menu a differenza dell'ordine è persistente nel tempo.\\
+Il menu vine gestito da un container realizzato basandosi sulla struttura di una lista doppiamente linkata.\\
+Nello sviluppo si è cercato di rispettare il pattern MVC (Model-View-Controller), dividendo la struttura, l'interfaccia grafica e il controllo.
+
+\section{Model}     					% sezione 1.2
+Sono presenti 2 gerarchie una con superclasse la classe astratta \texttt{Food} l'altra la classe concreta \texttt{Order}.\\
+La gerarchia \texttt{Food} è estendibile in quanto non presenta numerosi vincoli, anche la gerarchia \texttt{Order} è estendibile avendo solo vincoli alla gerarchia \texttt{Food} attraverso puntatori alla classe base \texttt{Food} (polimorfismo).
+\subsection{Food}
+La classe \texttt{Food} è astratta in quanto presenta il distruttore come metodo virtuale puro.\\
+Descrive in modo generale un cibo, i suoi campi dati sono:  \textit{name, price} e \textit{category}.
+\subsection{Dish}
+\texttt{Dish} è una classe concreta sottotipo di \texttt{Food}, aggiunge ai campi dati ereditati una \texttt{GList<QString>}, chiamata \textit{ingredients} che elenca gli ingredienti presenti nel piatto. Si è scelta un contenitore lista in quanto gli ingredienti vengono, nella maggior parte dei casi, letti tutti in successione per la stampa della lista o avvengono inserimenti in coda in caso di aggiunta.\\
+Presenta i metodi di scrittura e lettura nel database di un oggetto \texttt{Dish}.
+\subsection{Beverage}
+\texttt{Beverage} è l'altra classe concreta sottotipo di \texttt{Food}, l'unico campo che viene aggiunto è \textit{capacity} che descrive la quantità volumetrica di bevanda. Descrive in modo generico una bevanda e come per la classe \texttt{Dish} presenta innumerevoli possibilità di essere estesa, per esempio una suddivisione tra alcolici e analcolici.\\
+Sono presenti i metodi di scrittura e lettura nel database.
+\subsection{Order}
+\texttt{Order} è la classe costituita da una lista di \texttt{OrderItem} e descrive ogni singolo componente dell'ordine.\\
+Si è scelta una lista in quanto l'inserimento viene fatto sempre in coda e non c'è bisogno di estrarre elementi specifici.
+\subsection{OrderItem}
+\texttt{OrderItem} descrive ogni piatto ordinato e oltre ad un puntatore \texttt{Food*} possiede i campi \textit{id, quantity, changes} e \textit{varPrice}, che rispettivamente rappresentano, un identificativo per l'item, la quantità ordinata, le modifiche apportate al piatto (aggiunte o rimozioni) e la variazione di prezzo.\\
+Le variazioni sono di tipo \texttt{QString} contenenti il nome della modifica, il primo carattere è \texttt{+} o \texttt{-} e viene impostato automaticamente in base all'operazione scelta.\\
+Per non modificare il prezzo, visto che non viene fatta una copia del piatto ma viene usato un puntatore, viene salvata la differenza di prezzo da quello originale a quello con le modifiche. Per semplicità si è deciso che ad ogni aggiunta e rimozione corrisponda un aumento o diminuzione di 0.20€.
+
+\section{View}     						% sezione 1.2
+Sono presenti diverse view le precedenti sono quelle di modifica dell'ordine e di modifica del menu.\\
+La parte view è a volte non totalmente separata dal controller.\\
+Per non creare interferenze si è deciso di disattivare i widget padri all'apertura di quelli creati per alcune funzionalità.
+\subsection{MainWidget}
+\texttt{MainWidget} è la prima schermata che si trova all'avvio del programma.\\
+Nella barra dei menu, e solo in questo widget è presente la possibilità di modifica, rimozione e aggiunta di un cibo al menu.\\
+Il widget è diviso in due pannelli, quello di destra contiene i pulsanti per l'aggiunta dell'ordinazione e in basso quello per il pagamento del conto. A sinistra invece è presente un'area scrollabile in cui saranno elencate le ordinazioni che comporranno l'ordine, con ognuna un pulsante per eliminarle.\\
+Siccome non ha senso pagare per un conto vuoto, in caso di nessun elemento nel conto, il tasto per pagare viene disabilitato.
+\subsection{OrderItemWidget}
+Rappresenta il layout con cui viene mostrato ogni singolo elemento dell'ordine nella schermata \texttt{MainWidget}, mostra il nome, il prezzo unitario e il prezzo totale, inoltre contiene il pulsante che permette di eliminare l'elemento dall'ordine.
+\subsection{ItemWidget}
+Viene chiamata per aggiungere un elemento all'ordine e permette la scelta di un cibo (chiamata a \texttt{MenuWidget}), la quantità e l'aggiunta di modifiche (chiamata a \texttt{AddChange}). Ogni modifica può essere eliminata cliccando sul rispettivo pulsante \texttt{X}.
+\subsection{MenuWidget}
+Mostra in una finestra interamente scrollabile la lista di tutti i cibi presenti nel menu, vengono mostrati raggruppati per categorie e posti in ordine alfabetico sia le categorie che i cibi in esse contenuti.\\
+\subsection{MenuItemWidget}
+Rappresenta il layout con cui viene mostrato ogni singolo elemento dell'ordine nella schermata \texttt{MenuWidget}, mostra il nome, il prezzo e il pulsante che permette di eliminare l'elemento dall'ordine.\\
+A differenza che il cibo sia un \texttt{Dish*} o un \texttt{Beverage*}, aggiunge sotto alle informazione sopra esposte rispettivamente la lista degli ingredienti o la capacità.\\
+In base alla funzione necessaria viene passato un intero che provvede a modificare la funzione dei pulsanti di ogni singolo piatto. Le tre funzioni sono quelle di selezione, nel caso di visualizzazione del menu per scelta, il che ritornerà un puntatore al piatto; di rimozione che elimina il cibo definitivamente dal menu e anche dal database e la modifica che apre un nuovo widget con tutte le informazioni del piatto.
+\subsection{NewFoodWidget}
+Questo widget è richiamato per aggiungere al menu o modificare un piatto. Al termine dell'operazione, il piatto aggiunto o modificato viene salvato in modo permanente nel database, per non perdere l'aggiornamento del menu.\\
+In caso di aggiunta mostra una scelta sul tipo di piatto da inserire e poi una schermata con tutte le informazioni richieste.\\
+Sono presenti dei controlli a video in caso non vengano completati tutti i campi richiesti.
+\subsection{BillWidget}
+Viene aperto se dal \texttt{MainWidget} si preme il pulsante per pagare e mostra il totale del conto e la possibilità di confermare il pagamento. In caso positivo l'ordine viene cancellato e ricreato, ritornando alla schermata chiamante con un ordine nuovo.
+
+\section{Controller}     				% sezione 1.2
+Il controller è gestito dalla classe \texttt{Actor} che contiene il \textit{menu} come \texttt{GList<Food*>} e un \texttt{Order}.
+\subsection{Actor}
+La classe \texttt{Actor} presenta i metodi per la modifica del menu, con inserimento, rimozione e ricerca di un cibo, inoltre presenta i metodi per il salvataggio e la scrittura nel database.
+
+\section{Container}     				% sezione 1.2
+Come contenitore si è deciso di usare una lista doppiamente linkata, in quanto le maggiori operazioni eseguite sono inserimenti in coda o comunque la lettura in ordine degli elementi della lista.
+\subsection{GList}
+\texttt{GList} è stata creata seguendo le linee base si una lista doppiamente linkata.\\
+Presenta quindi i metodi: \texttt{begin, end, size, empty, insert, erase, push, pop, clear, merge, sort}.\\
+I suoi nodi sono formati da puntatori smart che tengono conto del numero di riferimenti all'oggetto, in questo modo è permessa anche condivisione di memoria.
+\section{Database}
+Per il salvataggio del menu si è scelto di usare JSON, consigliato nella documentazione Qt.\\
+La libreria Qt infatti offre la gestione dei dati in modo semplice e veloce. Il salvataggio avviene utilizzando metodi richiamati a cascata presenti nelle classi del model.\\
+Il database viene totalmente gestito a monte dalla classe \texttt{Actor}, attraverso i metodi di scrittura e lettura del database e di modifica dei cibi.
+
+\chapter{Esecuzione}           			% capitolo 2
+\section{Ambiente di sviluppo}     		% sezione 2.1
+\begin{itemize}
+\item Compilatore: GCC 4.6.3
+\item versione QMake: 3.0
+\item cersione Qt: 5.3.2
+\item Sistema Operativo: Ubuntu 12.04.1 LTS
+\end{itemize}
+
+\section{Materiale consegnato}     		% sezione 2.2
+La cartella "mzecchin\_pao1516\_freedom" è così suddivisa:
+\begin{itemize}
+\item cartella "restaurant" contente i file \texttt{.h} e \texttt{.cpp} e i file \texttt{.pro} e \texttt{.pri} per una corretta compilazione; è inoltre presente un file "\texttt{menu.json}" che contiene il database JSON.
+\item "relazione.pdf" che contiene la relazione del progetto (file corrente)
+\end{itemize}
+
+\section{Compilazione ed esecuzione}	% sezione 2.3
+Attraverso la shell del terminale posizionarsi all'interno della cartella "restaurant" ed eseguire il comando \texttt{qmake}. Una volta generato il Makefile, sempre all'interno della cartella "restaurant", avviare il comando \texttt{make}. Questa operazione genererà un file eseguibile restaurant che potrà essere avviato tramite un doppio click.
+\end{document}
