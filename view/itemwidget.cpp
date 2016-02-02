@@ -11,8 +11,8 @@ ItemWidget::ItemWidget(Actor* _actor, QWidget *parent) : actor(_actor), orderIte
     QMenuBar* menuBar = new QMenuBar;
 
     //menu 'File'
-    QMenu* fileMenu = menuBar->addMenu(tr("File"));
-    QAction* closeAction = fileMenu->addAction(tr("Close"));
+    QMenu* fileMenu = menuBar->addMenu("File");
+    QAction* closeAction = fileMenu->addAction("Close");
     connect(closeAction,SIGNAL(triggered()),this,SLOT(close()));
 
     createMainGroupBox();
@@ -32,8 +32,8 @@ void ItemWidget::createMainGroupBox() {
 
     foodGB = new QGroupBox;
     QHBoxLayout* foodLayout = new QHBoxLayout(foodGB);
-    foodLbl = new QLabel(tr("Food:"));
-    selectFoodLbl = new QLabel(tr(""));
+    foodLbl = new QLabel("Food:");
+    selectFoodLbl = new QLabel("");
     foodBtn = new QPushButton("select food");
     foodLayout->addWidget(foodLbl);
     foodLayout->addWidget(selectFoodLbl);

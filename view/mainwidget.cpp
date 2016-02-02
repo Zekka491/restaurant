@@ -13,21 +13,21 @@ MainWidget::MainWidget(Actor* _actor, QWidget *parent) : actor(_actor), QWidget(
 
 
     //menu 'File'
-    QMenu* fileMenu = menuBar->addMenu(tr("File"));
-    QAction* newOrder = fileMenu->addAction(tr("New order"));
+    QMenu* fileMenu = menuBar->addMenu("File");
+    QAction* newOrder = fileMenu->addAction("New order");
     connect(newOrder,SIGNAL(triggered()),this,SLOT(restartView()));
     fileMenu->addSeparator();
-    QAction* closeAction = fileMenu->addAction(tr("Close"));
+    QAction* closeAction = fileMenu->addAction("Close");
     connect(closeAction,SIGNAL(triggered()),this,SLOT(close()));
 
     //menu 'Menu'
-    QMenu* menuMenu = menuBar->addMenu(tr("Menu"));
-    QAction* addFood = menuMenu->addAction(tr("Add a food"));
-    QAction* removeFood = menuMenu->addAction(tr("Remove a food"));
-    QAction* editFood = menuMenu->addAction(tr("Edit a food"));
-    connect(addFood,SIGNAL(triggered()),this,SLOT(addFood()));
-    connect(removeFood,SIGNAL(triggered()),this,SLOT(removeFood()));
-    connect(editFood,SIGNAL(triggered()),this,SLOT(editFood()));
+    QMenu* menuMenu = menuBar->addMenu("Menu");
+    addFoodAct = menuMenu->addAction("Add a food");
+    removeFoodAct = menuMenu->addAction("Remove a food");
+    editFoodAct = menuMenu->addAction("Edit a food");
+    connect(addFoodAct,SIGNAL(triggered()),this,SLOT(addFood()));
+    connect(removeFoodAct,SIGNAL(triggered()),this,SLOT(removeFood()));
+    connect(editFoodAct,SIGNAL(triggered()),this,SLOT(editFood()));
 
     createMainGroupBox();
 
@@ -48,8 +48,8 @@ void MainWidget::createMainGroupBox() {
 
     editOrderGB = new QGroupBox;
     editOrderLayout = new QVBoxLayout(editOrderGB);
-    addItemButton = new QPushButton(tr("Add"));
-    payBillButton = new QPushButton(tr("Pay Bill"));
+    addItemButton = new QPushButton("Add");
+    payBillButton = new QPushButton("Pay Bill");
     editOrderLayout->addWidget(addItemButton,0,Qt::AlignTop);
     editOrderLayout->addWidget(payBillButton,0,Qt::AlignBottom);
     connect(addItemButton,SIGNAL(clicked()),this,SLOT(addItem()));
@@ -65,6 +65,11 @@ void MainWidget::createMainGroupBox() {
     scroll->setWidget(showOrderGB);
     scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
+    if(actor->getMenu().size() == 0) {
+        removeFoodAct->setEnabled(false);
+        editFoodAct->setEnabled(false);
+        addItemButton->setEnabled(false);
+    }
     layout->addWidget(scroll,30);
     layout->addWidget(editOrderGB,10);
     hGroupBox->setLayout(layout);
@@ -167,19 +172,32 @@ void MainWidget::addFood() {
 
 void MainWidget::addFoodToMenu(Food* food) {
     actor->addFood(food);
+    if(actor->getMenu().size() != 0) {
+        removeFoodAct->setEnabled(true);
+        editFoodAct->setEnabled(true);
+        addItemButton->setEnabled(true);
+    }
 }
 
 void MainWidget::removeFood() {
     MenuWidget* removeWidget = new MenuWidget(actor,1);
     setEnabled(false);
-    connect(removeWidget,SIGNAL(closeMenu(bool)),this,SLOT(setEnabled(bool)));
+    connect(removeWidget,SIGNAL(closeMenu(bool)),this,SLOT(controlMenu()));
     removeWidget->show();
 }
 
 void MainWidget::editFood() {
     MenuWidget* editWidget = new MenuWidget(actor,2);
     setEnabled(false);
-    connect(editWidget,SIGNAL(closeMenu(bool)),this,SLOT(setEnabled(bool)));
+    connect(editWidget,SIGNAL(closeMenu(bool)),this,SLOT(controlMenu()));
     editWidget->show();
 }
 
+void MainWidget::controlMenu() {
+    setEnabled(true);
+    if(actor->getMenu().size() == 0) {
+        removeFoodAct->setEnabled(false);
+        editFoodAct->setEnabled(false);
+        addItemButton->setEnabled(false);
+    }
+}

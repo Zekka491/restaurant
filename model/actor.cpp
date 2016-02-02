@@ -1,8 +1,11 @@
 #include "actor.h"
+#include <QMessageBox>
 
 Actor::Actor() {
-    loadMenu();
-    //menu.sort();
+    if(!loadMenu()) {
+        QMessageBox error;
+        error.critical(0,"File non trovato","File menu non trovato");
+    }
 }
 
 GList<Food*> Actor::getMenu() const {
@@ -25,7 +28,6 @@ GList<Food*>::iterator Actor::findFood(Food* food) {
 }
 
 void Actor::addFood(Food* food) {
-    cout<<"Add food"<<endl;
     GList<Food*>::iterator it;
     for(it = menu.begin(); it != menu.end(); it++) {
         if(*food < **it) {
@@ -44,7 +46,7 @@ void Actor::removeFood(Food* food) {
 }
 
 bool Actor::loadMenu() {
-    QFile loadFile(QStringLiteral("C:/Users/Mattia/Documents/Università/p2/progetto15-16/ristorante/json/menu.json"));
+    QFile loadFile(QStringLiteral("json/menu.json"));
 
     if (!loadFile.open(QIODevice::ReadOnly)) {
         qWarning("Couldn't open save file.");
@@ -61,7 +63,6 @@ bool Actor::loadMenu() {
 }
 
 bool Actor::saveMenu() const {
-    cout<<"save menu"<<endl;
     QFile saveFile(QStringLiteral("json/menu.json"));
 
     if (!saveFile.open(QIODevice::WriteOnly)) {

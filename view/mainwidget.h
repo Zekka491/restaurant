@@ -32,6 +32,7 @@ public slots:
     void removeFood();
     void editFood();
     void addFoodToMenu(Food*);
+    void controlMenu();
 
 signals:
 
@@ -41,6 +42,11 @@ private:
     //GUI
     QGroupBox* hGroupBox;
     QVBoxLayout* mainLayout;
+
+    QAction* addFoodAct;
+    QAction* removeFoodAct;
+    QAction* editFoodAct;
+
     QGroupBox* showOrderGB;
     QVBoxLayout* showOrderLayout;
     QGroupBox* editOrderGB;

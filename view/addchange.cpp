@@ -9,10 +9,10 @@ AddChange::AddChange(int _function, QWidget *parent) : function(_function), QWid
     QMenuBar* menuBar = new QMenuBar;
 
     //menu 'File'
-    QMenu* fileMenu = menuBar->addMenu(tr("File"));
-    QAction* newOrder = fileMenu->addAction(tr("New order"));
+    QMenu* fileMenu = menuBar->addMenu("File");
+    QAction* newOrder = fileMenu->addAction("New order");
     fileMenu->addSeparator();
-    QAction* closeAction = fileMenu->addAction(tr("Close"));
+    QAction* closeAction = fileMenu->addAction("Close");
     connect(closeAction,SIGNAL(triggered()),this,SLOT(close()));
 
     createMainGroupBox();

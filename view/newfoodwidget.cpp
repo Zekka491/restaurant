@@ -41,11 +41,9 @@ NewFoodWidget::NewFoodWidget(Actor* _actor, Food* _food, QWidget *parent) : acto
 }
 
 void NewFoodWidget::dishLayout(Dish* _dish) {
-    cout<<"clear"<<endl;
     clearLayout();
     dish = _dish;
     mainLayout = new QVBoxLayout;
-    cout<<"standard"<<endl;
     standardLayout(dish);
 
     ingredientsGB = new QGroupBox;
@@ -279,7 +277,6 @@ void NewFoodWidget::clearLayout() {
 }
 
 void NewFoodWidget::showIngredient(QString* myString) {
-    cout<<"stampo "<<myString->toStdString()<<endl;
     QWidget* child;
     if(ingredientsList.empty()) {
         child = showIngredientsLayout->takeAt(0)->widget();
@@ -297,10 +294,8 @@ void NewFoodWidget::showIngredient(QString* myString) {
 }
 
 void NewFoodWidget::showIngredientsList() {
-    cout<<"stampo lista"<<endl;
     GList<QString>::iterator it;
     for(it = dish->getIngredients().begin(); it != dish->getIngredients().end(); it++) {
-        cout<<(*it).toStdString()<<endl;
         showIngredient(&(*it));
     }
 }

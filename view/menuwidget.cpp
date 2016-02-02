@@ -9,8 +9,8 @@ MenuWidget::MenuWidget(Actor* _actor, int _function, QWidget *parent) : actor(_a
     QMenuBar* menuBar = new QMenuBar;
 
     //menu 'File'
-    QMenu* fileMenu = menuBar->addMenu(tr("File"));
-    QAction* closeAction = fileMenu->addAction(tr("Close"));
+    QMenu* fileMenu = menuBar->addMenu("File");
+    QAction* closeAction = fileMenu->addAction("Close");
     connect(closeAction,SIGNAL(triggered()),this,SLOT(close()));
     vGroupBox = new QGroupBox;
     layout = new QVBoxLayout;
@@ -60,7 +60,6 @@ void MenuWidget::createMainGroupBox() {
     }
     (*categoryGB.back())->setLayout(*categoryLayout.back());
     GList<QGroupBox*>::iterator itC;
-    //cout<<"for GB"<<endl;
     for(itC = categoryGB.begin(); itC != categoryGB.end(); itC++) {
         layout->addWidget(*itC,10);
     }
